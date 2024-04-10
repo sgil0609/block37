@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const prisma = require('../prisma');
 const JWT_SECRET = "your_jwt_secret";
 
-app.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -30,7 +30,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/signup", async (req, res) => {
+router.post("/signup", async (req, res) => {
   const { email, password, username } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -53,7 +53,6 @@ app.post("/signup", async (req, res) => {
 });
 
 app.get('/protected', authenticateToken, (req, res) => {
-    // Only authenticated users can access this
     res.json({ message: "This is protected data" });
   });
 

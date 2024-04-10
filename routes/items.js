@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const prisma = require('../prisma');
 
-app.get("/items", async (req, res) => {
+router.get("/items", async (req, res) => {
   try {
     const items = await prisma.item.findMany();
     res.json(items);
