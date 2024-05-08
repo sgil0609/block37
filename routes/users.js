@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const prisma = require('../prisma');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 const JWT_SECRET = "your_jwt_secret";
+const authenticateToken = require("../middleware/token")
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -52,7 +54,7 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-app.get('/protected', authenticateToken, (req, res) => {
+router.get('/protected', authenticateToken, (req, res) => {
     res.json({ message: "This is protected data" });
   });
 

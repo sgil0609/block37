@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const prisma = require('../prisma');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 const authenticateToken = require('../middleware/token');
 
 router.post("/reviews", authenticateToken, async (req, res) => {

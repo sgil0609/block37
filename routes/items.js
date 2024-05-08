@@ -1,17 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const prisma = require('../prisma');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-router.get("/items", async (req, res) => {
-  try {
-    const items = await prisma.item.findMany();
-    res.json(items);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch items" });
-  }
-});
-
-app.get("/items", async (req, res) => {
+// Define routes using router object
+router.get("/", async (req, res) => {
   const { search } = req.query;
 
   try {
@@ -42,10 +35,12 @@ app.get("/items", async (req, res) => {
 
     res.json(itemsWithAvgRating);
   } catch (error) {
+    console.error("Error fetching items:", error);
     res.status(500).json({ error: "Failed to fetch items" });
   }
 });
-app.get("/items/:itemId", async (req, res) => {
+
+router.get("/:itemId", async (req, res) => {
   const { itemId } = req.params;
   try {
     const item = await prisma.item.findUnique({
@@ -60,7 +55,7 @@ app.get("/items/:itemId", async (req, res) => {
     if (item) {
       const avgRating =
         item.reviews.reduce((acc, review) => acc + review.rating, 0) /
-          item.reviews.length || 0;
+        (item.reviews.length || 1); 
 
       res.json({
         ...item,
@@ -70,6 +65,7 @@ app.get("/items/:itemId", async (req, res) => {
       res.status(404).json({ error: "Item not found" });
     }
   } catch (error) {
+    console.error("Error fetching item details:", error);
     res.status(500).json({ error: "Failed to fetch item details" });
   }
 });
